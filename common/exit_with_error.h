@@ -4,7 +4,7 @@
 #include "all_imports.h"
 
 int exit_with_error(char *error_message) {
-  fprintf(stderr, "%s", error_message);
+  fprintf(stderr, "%s\n", error_message);
 #ifdef _WIN32
   printf("WSACleanup() called.\n");
   WSACleanup();
