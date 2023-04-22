@@ -1,3 +1,7 @@
+# Ignore editor configuration files
+.vscode/
+.idea/
+
 # Ignore object files and executables
 *.exe
 *.o
