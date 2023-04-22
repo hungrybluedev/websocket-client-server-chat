@@ -43,19 +43,23 @@ int main(int argc, char *argv[]) {
   char buffer[BUFFER_SIZE];
 
   struct sockaddr_in server_address;
-  struct hostent *server;
 
-  server = gethostbyname(argv[1]);
-  if (server == NULL) {
-    return exit_with_error("Error: no such host");
+  // Test for loopback address
+  char *self_addresses[] = {"localhost", "loopback"};
+  char *address = argv[1];
+  for (size_t i = 0; i < sizeof(self_addresses) / sizeof(char *); i++) {
+    if (strncmp(argv[1], self_addresses[i], strlen(self_addresses[i])) == 0) {
+      address = "127.0.0.1";
+      break;
+    }
   }
 
-  erase_from_memory(&server_address, 0, sizeof(server_address));
-  server_address.sin_family = AF_INET;
-  memmove_s(&server_address.sin_addr.s_addr,
-            sizeof(server_address.sin_addr.s_addr), server->h_addr,
-            server->h_length);
+  server_address.sin_addr.s_addr = inet_addr(address);
+  if (server_address.sin_addr.s_addr == INADDR_NONE) {
+    return exit_with_error("Error: invalid IP address");
+  }
   server_address.sin_port = htons(port_number);
+  server_address.sin_family = AF_INET;
 
   if (connect(socket_fd, (struct sockaddr *)&server_address,
               sizeof(server_address)) < 0) {
@@ -64,7 +68,7 @@ int main(int argc, char *argv[]) {
 
   printf("Connected to server.\nType 'exit' to quit.\n");
 
-  while (TRUE) {
+  while (true) {
     erase_from_memory(buffer, 0, BUFFER_SIZE);
     printf("Client: ");
     fgets(buffer, BUFFER_SIZE - 1, stdin);

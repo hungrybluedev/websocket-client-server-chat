@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 
   printf("Server started.\nWaiting for client to send message...\n");
 
-  while (TRUE) {
+  while (true) {
     // Clear the buffer
     erase_from_memory(buffer, 0, BUFFER_SIZE);
 
