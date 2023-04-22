@@ -1,0 +1,11 @@
+# Ignore object files and executables
+*.exe
+*.o
+
+# Ignore target executables
+client
+server
+
+# Un-ignore the source directories
+!client/
+!server/
